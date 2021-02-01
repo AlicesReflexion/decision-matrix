@@ -235,23 +235,30 @@ function loadNextQuestion(question:string, answer:string) {
  * calculate and display final results
  */
 function displayFinalResults() {
-  let compareArray = [];
+  let compareArray = {};
   Object.keys(priority.program).forEach((element) => {
     Object.keys(priority.program[element]).forEach((subval) => {
       priority.program[element][subval] = priority.program[element][subval] * priority.priorities[subval];
     });
   });
+  const maxScore = (<number[]>(<string[]>Object.values(priority.priorities)).map((x) => parseInt(x, 10))).reduce((a, b) => a + b, 0);
   Object.keys(priority.program).forEach((element) => {
-    Object.values(priority.program[element]).reduce((a:number, b:number) => a+b, 0);
     compareArray[element] = Object.values(priority.program[element]).reduce((a:number, b:number) => a+b, 0);
   });
-  let largest = Object.keys(compareArray).reduce((a, b) => compareArray[a] > compareArray[b] ? a : b);
+  let scoresArray:[string, number][] = (Object.entries(compareArray));
+  scoresArray = scoresArray.map(([k, v]) => [k, 100*(v/maxScore)]);
+  console.log(scoresArray);
+  const largest = Object.keys(compareArray).reduce((a, b) => compareArray[a] > compareArray[b] ? a : b);
   const NextPageReq = new XMLHttpRequest();
   NextPageReq.open('GET', 'interviewPages/SimpleInterview/yourChoiceIs.html', true);
   NextPageReq.send();
   NextPageReq.onreadystatechange = () => {
     if (NextPageReq.readyState === 4 && NextPageReq.status === 200) {
       let innerHTML = NextPageReq.responseText.split('%Best Choice%').join(largest);
+      innerHTML = innerHTML.split('%progAPercent%').join(String(scoresArray[0][1]).slice(0, 4) + '%');
+      innerHTML = innerHTML.split('%progBPercent%').join(String(scoresArray[1][1]).slice(0, 4) + '%');
+      innerHTML = innerHTML.split('%progA%').join(scoresArray[0][0]);
+      innerHTML = innerHTML.split('%progB%').join(scoresArray[1][0]);
       let translateY = '-50%';
       if (window.innerHeight > window.innerWidth) {
         translateY = '0%';
