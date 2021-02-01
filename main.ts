@@ -72,3 +72,13 @@ function backOneStep() {
   }, 250)
   stepsLoaded -= 1;
 }
+
+function addQuality() {
+  let currentQualities = document.querySelectorAll('.quality');
+  let lastQuality = currentQualities[currentQualities.length-1];
+  let newQuality = document.createElement('input');
+  newQuality.type = 'text';
+  newQuality.placeholder = 'Example quality';
+  newQuality.classList.add('quality');
+  lastQuality.parentNode.insertBefore(newQuality, lastQuality.nextSibling);
+}
