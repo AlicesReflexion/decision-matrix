@@ -156,3 +156,19 @@ function createRankingPage() {
     }
   };
 }
+
+/**
+ * Update the priority object according to what the user answers in the RankPriorities page
+ * This is only used in the 'simple' interview.
+ */
+function populatePriorityValues() {
+  const selectedValues = document.querySelector('#step-3').children[1].children[0].children;
+  for(let i = 1; i < selectedValues.length; i++) {
+    const property = <HTMLInputElement>selectedValues[i].children[1].children[0];
+    const propertyName = property.name;
+    const query = 'input[name="' + propertyName + '"]:checked';
+    const selectedButton = <HTMLInputElement>document.querySelector(query);
+    const quality = selectedButton.parentElement.parentElement.children[0].innerHTML;
+    priority.priorities[quality] = selectedButton.value;
+  }
+}
