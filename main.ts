@@ -206,7 +206,6 @@ function createQuestionPages() {
 
 /**
  * Load the next page in the stack of questions.
- * @param {array} questionArray The premade stack of questions to load in
  */
 function loadNextQuestion() {
   let translateY = '-50%';
