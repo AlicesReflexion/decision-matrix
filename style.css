@@ -1,5 +1,6 @@
 body {
   background-color: #fdfffc;
+  overflow-x: hidden;
 }
 
 .mainbox {
@@ -12,9 +13,10 @@ body {
   left: 50%;
   top: 50%;
   position: absolute;
-  transform: translate(-50%, -50%);
+  transform: translate(100vw, -50%);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: #233144;
+  transition: transform 0.5s;
 }
 
 .mainbox > h1 {
@@ -50,6 +52,6 @@ body {
 @media (orientation: portrait) {
   .mainbox {
     top: 0;
-    transform: translate(-50%, 0);
+    transform: translate(100vw, 0);
   }
 }

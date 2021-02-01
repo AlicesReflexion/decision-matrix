@@ -1,4 +1,5 @@
 const firstStep = 'interviewPages/Startpage.html';
+let stepsLoaded = 0;
 
 window.addEventListener('load', function() {
   getNextPage(firstStep);
@@ -14,7 +15,38 @@ function getNextPage(pageUrl:string) {
   NextPageReq.send();
   NextPageReq.onreadystatechange = function() {
     if (NextPageReq.readyState === 4 && NextPageReq.status === 200) {
-      document.querySelector('.mainbox').innerHTML = NextPageReq.responseText;
+      let translateY = '-50%';
+      if(window.innerHeight > window.innerWidth){
+        translateY = '0%';
+      }
+      let newStep = document.createElement('div');
+      newStep.classList.add('mainbox');
+      newStep.id = 'step-' + stepsLoaded;
+      moveLastStep(stepsLoaded);
+      stepsLoaded += 1;
+      newStep.innerHTML = NextPageReq.responseText;
+      document.body.appendChild(newStep);
+      setTimeout(function() {
+        console.log('translate(-50%, ' + translateY + ')')
+        newStep.style.transform = 'translate(-50%, ' + translateY + ')';
+      }, 10);
     }
+  }
+}
+
+function moveLastStep(step:number) {
+  if (step > 0) {
+    step -= 1;
+    let translateY = '-50%';
+    if(window.innerHeight > window.innerWidth){
+      translateY = '0%';
+    }
+    let element = document.querySelector<HTMLElement>('#step-' + step);
+    let leftMove = parseInt(element.style.transform.split('-')[1].split('%')[0], 10);
+    leftMove += 120;
+    element.style.transform = 'translate(-' + leftMove + '%, ' + translateY + ')';
+    element.style.opacity = '0.3';
+    element.style.pointerEvents = 'none';
+    moveLastStep(step-1);
   }
 }
