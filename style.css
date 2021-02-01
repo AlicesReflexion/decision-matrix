@@ -3,8 +3,10 @@ body {
 }
 
 .mainbox {
-  max-width: 900px;
-  width: 100vw;
+  max-width: 700px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: calc(100vw - 20px - 20px); /* left and right padding */
   max-height: 600px;
   height: 100vh;
   left: 50%;
@@ -23,8 +25,11 @@ body {
   background-color: #98c1d9;
   border: none;
   border-radius: 30px;
-  width: 300px;
-  height: 100px;
+  min-width: 40vw;
+  max-width: 300px;
+  height: 10vh;
+  min-height: 60px;
+  max-height: 100px;
   font-weight: bold;
   font-size: 30px;
   color: #fff;
@@ -40,4 +45,11 @@ body {
 .mainbox > .beginButton:active {
   background-color: #3d5a80;
   transition: none;
+}
+
+@media (orientation: portrait) {
+  .mainbox {
+    top: 0;
+    transform: translate(-50%, 0);
+  }
 }
