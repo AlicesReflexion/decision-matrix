@@ -1,5 +1,9 @@
 const firstStep = 'interviewPages/Startpage.html';
 let stepsLoaded = 0;
+let priority = {
+  program: {},
+  priorities: {}
+};
 
 window.addEventListener('load', function() {
   getNextPage(firstStep);
@@ -81,4 +85,19 @@ function addQuality() {
   newQuality.placeholder = 'Example quality';
   newQuality.classList.add('quality');
   lastQuality.parentNode.insertBefore(newQuality, lastQuality.nextSibling);
+}
+
+function createSimplePriorityObject() {
+  let nameElements:NodeListOf<HTMLInputElement> = document.querySelectorAll('.programName');
+  let qualityElements:NodeListOf<HTMLInputElement> = document.querySelectorAll('.quality');
+  qualityElements.forEach((element) => {
+    priority.priorities[element.value] = 0;
+  });
+  nameElements.forEach((element) => {
+    priority.program[element.value] = {}
+    qualityElements.forEach((el2) => {
+      priority.program[element.value][el2.value] = 0;
+    })
+  })
+  console.log(priority);
 }
