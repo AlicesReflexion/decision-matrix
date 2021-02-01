@@ -2,7 +2,7 @@ const firstStep = 'interviewPages/Startpage.html';
 let stepsLoaded = 0;
 let priority = {
   program: {},
-  priorities: {}
+  priorities: {},
 };
 
 window.addEventListener('load', function() {
@@ -17,35 +17,38 @@ function getNextPage(pageUrl:string) {
   const NextPageReq = new XMLHttpRequest();
   NextPageReq.open('GET', pageUrl, true);
   NextPageReq.send();
-  NextPageReq.onreadystatechange = function() {
+  NextPageReq.onreadystatechange = () => {
     if (NextPageReq.readyState === 4 && NextPageReq.status === 200) {
       let translateY = '-50%';
-      if(window.innerHeight > window.innerWidth){
+      if (window.innerHeight > window.innerWidth) {
         translateY = '0%';
       }
-      let newStep = document.createElement('div');
+      const newStep = document.createElement('div');
       newStep.classList.add('mainbox');
       newStep.id = 'step-' + stepsLoaded;
       moveLastStep(stepsLoaded);
       stepsLoaded += 1;
       newStep.innerHTML = NextPageReq.responseText;
       document.body.appendChild(newStep);
-      setTimeout(function() {
-        console.log('translate(-50%, ' + translateY + ')')
+      setTimeout(() => {
         newStep.style.transform = 'translate(-50%, ' + translateY + ')';
       }, 50);
     }
-  }
+  };
 }
 
+/**
+ * Move element to the left to accompany new step
+ * @param {number} step Numbered instance of the element we're moving
+ */
 function moveLastStep(step:number) {
   if (step > 0) {
     step -= 1;
     let translateY = '-50%';
-    if(window.innerHeight > window.innerWidth){
+    if (window.innerHeight > window.innerWidth) {
       translateY = '0%';
     }
-    let element = document.querySelector<HTMLElement>('#step-' + step);
+    const element = document.querySelector<HTMLElement>('#step-' + step);
     let leftMove = parseInt(element.style.transform.split('-')[1].split('%')[0], 10);
     leftMove += 120;
     element.style.transform = 'translate(-' + leftMove + '%, ' + translateY + ')';
@@ -55,14 +58,17 @@ function moveLastStep(step:number) {
   }
 }
 
+/**
+ * Remove the current element and go back to the last interview page.
+ */
 function backOneStep() {
   let translateY = '-50%';
-  if(window.innerHeight > window.innerWidth){
+  if (window.innerHeight > window.innerWidth) {
     translateY = '0%';
   }
   const steps:NodeListOf<HTMLElement> = document.querySelectorAll('.mainbox');
-  let newestStep = steps[steps.length-1];
-  let lastStep = steps[steps.length-2];
+  const newestStep = steps[steps.length-1];
+  const lastStep = steps[steps.length-2];
   newestStep.style.transform = 'translate(100vw, ' + translateY + ')';
   lastStep.style.opacity = '1';
   lastStep.style.pointerEvents = 'auto';
@@ -72,32 +78,39 @@ function backOneStep() {
     steps[i].style.transform = 'translate(-' + leftMove + '%, ' + translateY + ')';
   }
   setTimeout(function() {
-    newestStep.remove()
-  }, 250)
+    newestStep.remove();
+  }, 250);
   stepsLoaded -= 1;
 }
 
+/**
+ * create a new input field for qualities the user cares about
+ */
 function addQuality() {
-  let currentQualities = document.querySelectorAll('.quality');
-  let lastQuality = currentQualities[currentQualities.length-1];
-  let newQuality = document.createElement('input');
+  const currentQualities = document.querySelectorAll('.quality');
+  const lastQuality = currentQualities[currentQualities.length-1];
+  const newQuality = document.createElement('input');
   newQuality.type = 'text';
   newQuality.placeholder = 'Example quality';
   newQuality.classList.add('quality');
   lastQuality.parentNode.insertBefore(newQuality, lastQuality.nextSibling);
 }
 
+/**
+ * Populate the 'priority' object with the name of the programs and qualities the user is interested in.
+ * This is only used for the 'simple' interview.
+ */
 function createSimplePriorityObject() {
-  let nameElements:NodeListOf<HTMLInputElement> = document.querySelectorAll('.programName');
-  let qualityElements:NodeListOf<HTMLInputElement> = document.querySelectorAll('.quality');
+  const nameElements:NodeListOf<HTMLInputElement> = document.querySelectorAll('.programName');
+  const qualityElements:NodeListOf<HTMLInputElement> = document.querySelectorAll('.quality');
   qualityElements.forEach((element) => {
     priority.priorities[element.value] = 0;
   });
   nameElements.forEach((element) => {
-    priority.program[element.value] = {}
+    priority.program[element.value] = {};
     qualityElements.forEach((el2) => {
       priority.program[element.value][el2.value] = 0;
-    })
-  })
+    });
+  });
   console.log(priority);
 }
