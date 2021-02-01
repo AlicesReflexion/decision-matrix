@@ -65,6 +65,15 @@ body {
   max-height: 100px;
 }
 
+.mainbox > .largeSelection {
+  min-width: 40vw;
+  max-width: 300px;
+  height: 10vh;
+  min-height: 60px;
+  max-height: 100px;
+  margin-bottom: 30px;
+}
+
 .mainbox > .prevButton {
   position: absolute;
   bottom: 0;

@@ -4,6 +4,7 @@ let priority = {
   program: {},
   priorities: {},
 };
+let questionArray = [];
 
 window.addEventListener('load', function() {
   getNextPage(firstStep);
@@ -163,7 +164,7 @@ function createRankingPage() {
  */
 function populatePriorityValues() {
   const selectedValues = document.querySelector('#step-3').children[1].children[0].children;
-  for(let i = 1; i < selectedValues.length; i++) {
+  for (let i = 1; i < selectedValues.length; i++) {
     const property = <HTMLInputElement>selectedValues[i].children[1].children[0];
     const propertyName = property.name;
     const query = 'input[name="' + propertyName + '"]:checked';
@@ -171,4 +172,53 @@ function populatePriorityValues() {
     const quality = selectedButton.parentElement.parentElement.children[0].innerHTML;
     priority.priorities[quality] = selectedButton.value;
   }
+  createQuestionPages();
+}
+
+/**
+ * Create the array of question pages for every quality.
+ */
+function createQuestionPages() {
+  let idIncrementer = 0;
+  const NextPageReq = new XMLHttpRequest();
+  NextPageReq.open('GET', 'interviewPages/SimpleInterview/whichIsBetter.html', true);
+  NextPageReq.send();
+  NextPageReq.onreadystatechange = () => {
+    if (NextPageReq.readyState === 4 && NextPageReq.status === 200) {
+      const responseText = NextPageReq.responseText;
+      Object.keys(priority.priorities).forEach((element) => {
+        const currentQ = document.createElement('div');
+        currentQ.classList.add('mainbox');
+        let innerHTML = responseText.replace('%Quality Name%', element);
+        innerHTML = innerHTML.replace('%progA%', Object.keys(priority.program)[0]);
+        innerHTML = innerHTML.replace('%progB%', Object.keys(priority.program)[1]);
+        currentQ.innerHTML = innerHTML;
+        questionArray.push(currentQ);
+      });
+      questionArray.forEach((element) => {
+        element.id = 'step-' + (stepsLoaded + idIncrementer);
+        idIncrementer += 1;
+      });
+      loadNextQuestion();
+    }
+  };
+}
+
+/**
+ * Load the next page in the stack of questions.
+ * @param {array} questionArray The premade stack of questions to load in
+ */
+function loadNextQuestion() {
+  let translateY = '-50%';
+  if (window.innerHeight > window.innerWidth) {
+    translateY = '0%';
+  }
+  const toLoad = questionArray[0];
+  document.body.appendChild(toLoad);
+  moveLastStep(stepsLoaded);
+  stepsLoaded += 1;
+  setTimeout(() => {
+    toLoad.style.transform = 'translate(-50%, ' + translateY + ')';
+  }, 50);
+  questionArray.shift();
 }
