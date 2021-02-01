@@ -112,5 +112,47 @@ function createSimplePriorityObject() {
       priority.program[element.value][el2.value] = 0;
     });
   });
-  console.log(priority);
+  createRankingPage();
+}
+
+/**
+ * Create the ranking page, and set it as the next page in the interview.
+ */
+function createRankingPage() {
+  const NextPageReq = new XMLHttpRequest();
+  NextPageReq.open('GET', 'interviewPages/SimpleInterview/rankPriorities.html', true);
+  NextPageReq.send();
+  NextPageReq.onreadystatechange = () => {
+    if (NextPageReq.readyState === 4 && NextPageReq.status === 200) {
+      let translateY = '-50%';
+      if (window.innerHeight > window.innerWidth) {
+        translateY = '0%';
+      }
+      const newStep = document.createElement('div');
+      newStep.classList.add('mainbox');
+      newStep.id = 'step-' + stepsLoaded;
+      newStep.innerHTML = NextPageReq.responseText;
+      document.body.appendChild(newStep);
+      const toClone = newStep.children[1].children[0].children[1];
+      const numClones = Object.keys(priority.priorities).length-1;
+      for (let i = 0; i < numClones; i++) {
+        const clone = toClone.cloneNode(true);
+        toClone.parentNode.insertBefore(clone, toClone.nextSibling);
+      }
+      for (let i = 1; i < toClone.parentNode.children.length; i++) {
+        const oldHTML = toClone.parentNode.children[i].innerHTML;
+        const properName = Object.keys(priority.priorities)[i-1];
+        let smallName = properName.toLowerCase();
+        smallName = smallName.split(' ').join('');
+        let newHTML = oldHTML.split('%Quality name%').join(properName);
+        newHTML = newHTML.split('%qualityname%').join(smallName);
+        toClone.parentNode.children[i].innerHTML = newHTML;
+      }
+      moveLastStep(stepsLoaded);
+      stepsLoaded += 1;
+      setTimeout(() => {
+        newStep.style.transform = 'translate(-50%, ' + translateY + ')';
+      }, 50);
+    }
+  };
 }
