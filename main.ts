@@ -189,9 +189,9 @@ function createQuestionPages() {
       Object.keys(priority.priorities).forEach((element) => {
         const currentQ = document.createElement('div');
         currentQ.classList.add('mainbox');
-        let innerHTML = responseText.replace('%Quality Name%', element);
-        innerHTML = innerHTML.replace('%progA%', Object.keys(priority.program)[0]);
-        innerHTML = innerHTML.replace('%progB%', Object.keys(priority.program)[1]);
+        let innerHTML = responseText.split('%Quality Name%').join(element);
+        innerHTML = innerHTML.split('%progA%').join(Object.keys(priority.program)[0]);
+        innerHTML = innerHTML.split('%progB%').join(Object.keys(priority.program)[1]);
         currentQ.innerHTML = innerHTML;
         questionArray.push(currentQ);
       });
@@ -199,25 +199,73 @@ function createQuestionPages() {
         element.id = 'step-' + (stepsLoaded + idIncrementer);
         idIncrementer += 1;
       });
-      loadNextQuestion();
+      loadNextQuestion('', '');
     }
   };
 }
 
 /**
  * Load the next page in the stack of questions.
+ * @param {string} question The name of the quality chosen.
+ * @param {string} answer The chosen answer.
  */
-function loadNextQuestion() {
-  let translateY = '-50%';
-  if (window.innerHeight > window.innerWidth) {
-    translateY = '0%';
+function loadNextQuestion(question:string, answer:string) {
+  if (question !== '' && answer !== '') {
+    priority.program[answer][question] = 1;
   }
-  const toLoad = questionArray[0];
-  document.body.appendChild(toLoad);
-  moveLastStep(stepsLoaded);
-  stepsLoaded += 1;
-  setTimeout(() => {
-    toLoad.style.transform = 'translate(-50%, ' + translateY + ')';
-  }, 50);
-  questionArray.shift();
+  if (typeof(questionArray[0]) !== 'undefined') {
+    let translateY = '-50%';
+    if (window.innerHeight > window.innerWidth) {
+      translateY = '0%';
+    }
+    const toLoad = questionArray[0];
+    document.body.appendChild(toLoad);
+    moveLastStep(stepsLoaded);
+    stepsLoaded += 1;
+    setTimeout(() => {
+      toLoad.style.transform = 'translate(-50%, ' + translateY + ')';
+    }, 50);
+    questionArray.shift();
+  } else {
+    displayFinalResults();
+  }
+}
+
+/**
+ * calculate and display final results
+ */
+function displayFinalResults() {
+  let compareArray = [];
+  Object.keys(priority.program).forEach((element) => {
+    Object.keys(priority.program[element]).forEach((subval) => {
+      priority.program[element][subval] = priority.program[element][subval] * priority.priorities[subval];
+    });
+  });
+  Object.keys(priority.program).forEach((element) => {
+    Object.values(priority.program[element]).reduce((a:number, b:number) => a+b, 0);
+    compareArray[element] = Object.values(priority.program[element]).reduce((a:number, b:number) => a+b, 0);
+  });
+  let largest = Object.keys(compareArray).reduce((a, b) => compareArray[a] > compareArray[b] ? a : b);
+  const NextPageReq = new XMLHttpRequest();
+  NextPageReq.open('GET', 'interviewPages/SimpleInterview/yourChoiceIs.html', true);
+  NextPageReq.send();
+  NextPageReq.onreadystatechange = () => {
+    if (NextPageReq.readyState === 4 && NextPageReq.status === 200) {
+      let innerHTML = NextPageReq.responseText.split('%Best Choice%').join(largest);
+      let translateY = '-50%';
+      if (window.innerHeight > window.innerWidth) {
+        translateY = '0%';
+      }
+      const newStep = document.createElement('div');
+      newStep.classList.add('mainbox');
+      newStep.id = 'step-' + stepsLoaded;
+      newStep.innerHTML = innerHTML;
+      document.body.appendChild(newStep);
+      moveLastStep(stepsLoaded);
+      stepsLoaded += 1;
+      setTimeout(() => {
+        newStep.style.transform = 'translate(-50%, ' + translateY + ')';
+      }, 50);
+    }
+  };
 }
