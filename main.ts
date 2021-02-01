@@ -29,7 +29,7 @@ function getNextPage(pageUrl:string) {
       setTimeout(function() {
         console.log('translate(-50%, ' + translateY + ')')
         newStep.style.transform = 'translate(-50%, ' + translateY + ')';
-      }, 10);
+      }, 50);
     }
   }
 }
