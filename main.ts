@@ -47,6 +47,28 @@ function moveLastStep(step:number) {
     element.style.transform = 'translate(-' + leftMove + '%, ' + translateY + ')';
     element.style.opacity = '0.3';
     element.style.pointerEvents = 'none';
-    moveLastStep(step-1);
+    moveLastStep(step);
   }
+}
+
+function backOneStep() {
+  let translateY = '-50%';
+  if(window.innerHeight > window.innerWidth){
+    translateY = '0%';
+  }
+  const steps:NodeListOf<HTMLElement> = document.querySelectorAll('.mainbox');
+  let newestStep = steps[steps.length-1];
+  let lastStep = steps[steps.length-2];
+  newestStep.style.transform = 'translate(100vw, ' + translateY + ')';
+  lastStep.style.opacity = '1';
+  lastStep.style.pointerEvents = 'auto';
+  for (let i = 0; i < steps.length-1; i++) {
+    let leftMove = parseInt(steps[i].style.transform.split('-')[1].split('%')[0], 10);
+    leftMove -= 120;
+    steps[i].style.transform = 'translate(-' + leftMove + '%, ' + translateY + ')';
+  }
+  setTimeout(function() {
+    newestStep.remove()
+  }, 250)
+  stepsLoaded -= 1;
 }
