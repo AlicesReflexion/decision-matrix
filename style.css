@@ -49,6 +49,64 @@ body {
   transition: none;
 }
 
+.mainbox > .prevButton {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.mainbox > .nextButton {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.mainbox > .prevButton,
+.mainbox > .nextButton {
+  background-color: #98c1d9;
+  border: none;
+  border-radius: 15px;
+  width: min-content;
+  height: 5vh;
+  min-height: 25px;
+  max-height: 100px;
+  font-weight: bold;
+  font-size: 30px;
+  color: #fff;
+  display: block;
+  transition: background-color 0.2s;
+}
+
+.mainbox > .prevButton:hover,
+.mainbox > .nextButton:hover {
+  transition: background-color 0.5s;
+  background-color: #e0f3ff;
+}
+
+.mainbox > .prevButton:active,
+.mainbox > .nextButton:active {
+  background-color: #3d5a80;
+  transition: none;
+}
+
+input[type=text] {
+  height: 25px;
+  border: 0;
+  width: calc(100% - 2px);
+  max-width: 350px;
+  margin-left: 1px;
+  box-shadow: -8px 10px 0 -7px #919191, 8px 10px 0 -7px #919191;
+  transition: box-shadow 0.3s;
+  font-size: 25px;
+  display: block;
+  margin-bottom: 25px;
+}
+
+input[type=text]:focus {
+  outline: none;
+  box-shadow: -8px 10px 0 -7px #3d5a80, 8px 10px 0 -7px #3d5a80;
+}
+
 @media (orientation: portrait) {
   .mainbox {
     top: 0;
