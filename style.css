@@ -1,0 +1,43 @@
+body {
+  background-color: #fdfffc;
+}
+
+.mainbox {
+  max-width: 900px;
+  width: 100vw;
+  max-height: 600px;
+  height: 100vh;
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #233144;
+}
+
+.mainbox > h1 {
+  color: #3d5a80;
+}
+
+.mainbox > .beginButton {
+  background-color: #98c1d9;
+  border: none;
+  border-radius: 30px;
+  width: 300px;
+  height: 100px;
+  font-weight: bold;
+  font-size: 30px;
+  color: #fff;
+  display: block;
+  transition: background-color 0.2s
+}
+
+.mainbox > .beginButton:hover {
+  transition: background-color 0.5s;
+  background-color: #e0f3ff;
+}
+
+.mainbox > .beginButton:active {
+  background-color: #3d5a80;
+  transition: none;
+}
