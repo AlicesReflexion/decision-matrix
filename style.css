@@ -23,30 +23,39 @@ body {
   color: #3d5a80;
 }
 
-.mainbox > .beginButton {
+.mainbox > .button {
   background-color: #98c1d9;
   border: none;
-  border-radius: 30px;
+  border-radius: 15px;
+  color: #fff;
+  display: block;
+  font-weight: bold;
+  font-size: 30px;
+  transition: background-color 0.2s;
+}
+
+.mainbox > .addButton {
+  border-radius: 5px;
+  width: 50px;
+  height: 50px;
+}
+
+.mainbox > .button:hover {
+  transition: background-color 0.5s;
+  background-color: #e0f3ff;
+}
+
+.mainbox > .button:active {
+  background-color: #3d5a80;
+  transition: none;
+}
+
+.mainbox > .beginButton {
   min-width: 40vw;
   max-width: 300px;
   height: 10vh;
   min-height: 60px;
   max-height: 100px;
-  font-weight: bold;
-  font-size: 30px;
-  color: #fff;
-  display: block;
-  transition: background-color 0.2s;
-}
-
-.mainbox > .beginButton:hover {
-  transition: background-color 0.5s;
-  background-color: #e0f3ff;
-}
-
-.mainbox > .beginButton:active {
-  background-color: #3d5a80;
-  transition: none;
 }
 
 .mainbox > .prevButton {
@@ -63,30 +72,11 @@ body {
 
 .mainbox > .prevButton,
 .mainbox > .nextButton {
-  background-color: #98c1d9;
-  border: none;
-  border-radius: 15px;
   width: min-content;
   height: 5vh;
-  min-height: 25px;
+  min-height: 50px;
   max-height: 100px;
-  font-weight: bold;
-  font-size: 30px;
-  color: #fff;
-  display: block;
-  transition: background-color 0.2s;
-}
-
-.mainbox > .prevButton:hover,
-.mainbox > .nextButton:hover {
-  transition: background-color 0.5s;
-  background-color: #e0f3ff;
-}
-
-.mainbox > .prevButton:active,
-.mainbox > .nextButton:active {
-  background-color: #3d5a80;
-  transition: none;
+  margin: 15px;
 }
 
 input[type=text] {
@@ -111,5 +101,7 @@ input[type=text]:focus {
   .mainbox {
     top: 0;
     transform: translate(100vw, 0);
+    height: 100%;
+    max-height: none;
   }
 }
